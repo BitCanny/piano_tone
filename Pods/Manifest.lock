@@ -1,0 +1,37 @@
+PODS:
+  - AMWaveTransition (0.6.1)
+  - AudioKit (2.3)
+  - BFPaperButton (2.0.18):
+    - UIColor+BFPaperColors
+  - BubbleTransition (1.0.1)
+  - Chronos-Swift (0.2.2)
+  - PermissionScope (1.0.1)
+  - PodsLicenseReader (0.0.2)
+  - TuningFork (0.0.8):
+    - AudioKit
+    - Chronos-Swift
+  - UIColor+BFPaperColors (1.7.2)
+  - WMGaugeView (0.0.3)
+
+DEPENDENCIES:
+  - AMWaveTransition
+  - BFPaperButton
+  - BubbleTransition
+  - PermissionScope
+  - PodsLicenseReader
+  - TuningFork
+  - WMGaugeView
+
+SPEC CHECKSUMS:
+  AMWaveTransition: 2d158213b0148980dfe7ce34f48a6b29eb3ff5bc
+  AudioKit: 393be71739265448039ef268f3582dee82783b0d
+  BFPaperButton: 16b3ec9c2964d24f89f623a4113321d3f003ed60
+  BubbleTransition: 76d5e306dbda0f622260ea7d082c971d976422ab
+  Chronos-Swift: 68a4fff66a41a1b698b30353d66bea412c5bba73
+  PermissionScope: 9767066cedefd211d90a8c4f92f6f1a987085ee8
+  PodsLicenseReader: 522b63fa772c84d95c1817cb03ae9a950f765821
+  TuningFork: 919bbad7fff5539f753f037761b73c2e1e520798
+  UIColor+BFPaperColors: 03101fe6c10ed00c6daae7c26553f1de41500853
+  WMGaugeView: cde63af0f85eb701b2fb6f7ff525061e333b2b7d
+
+COCOAPODS: 0.39.0

@@ -1,0 +1,6 @@
+framework module PodsLicenseReader {
+  umbrella header "PodsLicenseReader-umbrella.h"
+
+  export *
+  module * { export * }
+}

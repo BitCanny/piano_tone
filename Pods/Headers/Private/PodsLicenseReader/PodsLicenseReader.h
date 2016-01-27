@@ -1,0 +1,1 @@
+../../../PodsLicenseReader/PodsLicenseReader/PodsLicenseReader.h
