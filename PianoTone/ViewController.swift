@@ -40,7 +40,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
     
     var levelNo : Int = 0
     var diffFreqArray : [[Float]] = []
-    var keyArray : [String] = ["C2","D2","E2","F2","A2","B2","C3","D3","E3","F3","A3","B3","C4","D4","E4","F4","A4","B4","C5","D5","E5","F5","A5","B5","C6"]
+    var keyArray : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3","F3","G3","A3","B3","C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"]
     var generatedKeyArray : [String] = []
     var PressedKeyArray : [String] = []
     var totalKeys : Int = 0
@@ -73,6 +73,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.navigationController?.navigationBarHidden = true
+        delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         delegate?.mainViewController=self;
         tuner = Tuner()
         tuner?.delegate = self
@@ -102,7 +103,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         }
         toDB = defaults.doubleForKey("amplitudeLevel")
         if toDB <= 0 {
-            toDB = 0.02
+            toDB = 0.03
         }
         
         timeForTimer = defaults.doubleForKey("timerTime")
@@ -136,6 +137,18 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                 mainDrawingView?.backgroundColor = UIColor.whiteColor()
         if isFirstTime == true{
             
+           if gameLevel == "Medium"{
+            for var i = 1; i <= totalPage; ++i{
+                let  pianoPage : MediumGraphView = MediumGraphView()
+                pianoPage.frame = CGRectMake(CGFloat((i-1))*(self.view.frame.size.width), 0, (self.view.frame.size.width), (mainDrawingView?.frame.size.height)!)
+                pianoPage.indexOfSelectedKey = indexOfSelectedKey
+                pianoPage.whichKey = whichKey
+                mainDrawingView?.addSubview(pianoPage)
+                notePageArray.addObject(pianoPage)
+                pianoPage.backgroundColor = UIColor.whiteColor()
+            }
+            }
+           else if gameLevel == "Easy"{
             for var i = 1; i <= totalPage; ++i{
                let  pianoPage : lineView = lineView()
                 pianoPage.frame = CGRectMake(CGFloat((i-1))*(self.view.frame.size.width), 0, (self.view.frame.size.width), (mainDrawingView?.frame.size.height)!)
@@ -145,14 +158,40 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                 notePageArray.addObject(pianoPage)
                 pianoPage.backgroundColor = UIColor.whiteColor()
             }
+            }
+           else{
+            for var i = 1; i <= totalPage; ++i{
+                let  pianoPage : HardGraphView = HardGraphView()
+                pianoPage.frame = CGRectMake(CGFloat((i-1))*(self.view.frame.size.width), 0, (self.view.frame.size.width), (mainDrawingView?.frame.size.height)!)
+                pianoPage.indexOfSelectedKey = indexOfSelectedKey
+                pianoPage.whichKey = whichKey
+                mainDrawingView?.addSubview(pianoPage)
+                notePageArray.addObject(pianoPage)
+                pianoPage.backgroundColor = UIColor.whiteColor()
+            }
+            }
          
         mainDrawingView?.hidden = false
             
             UIView.animateWithDuration(0.05, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                if self.gameLevel == "Medium"{
+                    let  pianoPage : MediumGraphView = self.notePageArray[self.levelNo-1] as! MediumGraphView
+                    var rectView : CGRect = (pianoPage.frame)
+                    rectView.origin.x = 0
+                    pianoPage.frame = rectView
+                }
+                else if self.gameLevel == "Easy"{
                 let  pianoPage : lineView = self.notePageArray[self.levelNo-1] as! lineView
                 var rectView : CGRect = (pianoPage.frame)
                 rectView.origin.x = 0
                 pianoPage.frame = rectView
+                }
+                else{
+                    let  pianoPage : HardGraphView = self.notePageArray[self.levelNo-1] as! HardGraphView
+                    var rectView : CGRect = (pianoPage.frame)
+                    rectView.origin.x = 0
+                    pianoPage.frame = rectView
+                }
                 
                 }, completion:  { finished in
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64( Double(NSEC_PER_SEC) ))
@@ -179,10 +218,31 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         return notePageArray[levelNo-1] as! lineView
         
     }
+    func pianoView1()->MediumGraphView{
+        return notePageArray[levelNo-1] as! MediumGraphView
+        
+    }
+    func pianoView2()->HardGraphView{
+        return notePageArray[levelNo-1] as! HardGraphView
+        
+    }
     func drawUI(){
         
-    //    NSLog("LevelNo=%d", levelNo)
-        
+       if gameLevel == "Medium"{
+        let thisLineView : MediumGraphView = pianoView1()
+        if thisLineView.startKeyFromButtonNo == -1 {
+            self.performSelector(Selector("drawUI"), withObject: nil, afterDelay: 0.1)
+            
+        }
+        else{
+            //thisLineView.drawRect(thisLineView.frame)
+            thisLineView.indexOfSelectedKey = indexOfSelectedKey
+            thisLineView.whichKey = whichKey
+            thisLineView.drawKeysWithArray(generatedKeyArray)
+            
+        }
+        }
+       else  if gameLevel == "Easy"{
         let thisLineView : lineView = pianoView()
         if thisLineView.startKeyFromButtonNo == -1 {
          self.performSelector(Selector("drawUI"), withObject: nil, afterDelay: 0.1)
@@ -194,6 +254,21 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         thisLineView.whichKey = whichKey
         thisLineView.drawKeysWithArray(generatedKeyArray)
             
+        }
+        }
+       else{
+        let thisLineView : HardGraphView = pianoView2()
+        if thisLineView.startKeyFromButtonNo == -1 {
+            self.performSelector(Selector("drawUI"), withObject: nil, afterDelay: 0.1)
+            
+        }
+        else{
+            //thisLineView.drawRect(thisLineView.frame)
+            thisLineView.indexOfSelectedKey = indexOfSelectedKey
+            thisLineView.whichKey = whichKey
+            thisLineView.drawKeysWithArray(generatedKeyArray)
+            
+        }
         }
     }
     func check(){
@@ -218,34 +293,97 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
 
     }
      func saveData(){
+      if gameLevel == "Medium"{
+        let thisLineView : MediumGraphView = pianoView1()
+        if generatedKeyArray.count > 0 {
+            let defaults = NSUserDefaults.standardUserDefaults()
+            defaults.setBool(true, forKey: "isCurrentGame")
+            defaults.setInteger(totalKeys, forKey: "totalKeys")
+            defaults.setInteger(totalShowKeys, forKey: "totalShowKeys")
+            defaults.setInteger(currentKeyNo, forKey: "currentKeyNo")
+            defaults.setInteger(totalKeyCompleted, forKey: "totalKeyCompleted")
+            defaults.setInteger(totalCorrect, forKey: "totalCorrect")
+            defaults.setInteger(totalWrong, forKey: "totalWrong")
+            defaults.setInteger(timeS, forKey: "timeS")
+            defaults.setInteger(timeM, forKey: "timeM")
+            defaults.setInteger(timeH, forKey: "timeH")
+            defaults.setInteger(levelNo, forKey: "levelNo")
+            indexOfSelectedKey = (thisLineView.indexOfSelectedKey)
+            indexOfSelectedKey -= thisLineView.diffrence
+            whichKey = (thisLineView.whichKey)
+            whichKey -= 1
+            // NSLog("WhichKey=%d", whichKey)
+            defaults.setInteger(indexOfSelectedKey, forKey: "indexOfSelectedKey")
+            defaults.setInteger(whichKey, forKey: "whichKey")
+            defaults.setObject(generatedKeyArray, forKey: "generatedKeyArray")
+            defaults.setObject(PressedKeyArray, forKey: "PressedKeyArray")
+            defaults.setObject(gameLevel, forKey: "LevelCurrent")
+            defaults.setObject(gameMode, forKey: "ModeCurrent")
+            defaults.synchronize()
+        }
+
+        }
+      else if gameLevel == "Easy"{
         let thisLineView : lineView = pianoView()
         if generatedKeyArray.count > 0 {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setBool(true, forKey: "isCurrentGame")
-        defaults.setInteger(totalKeys, forKey: "totalKeys")
-        defaults.setInteger(totalShowKeys, forKey: "totalShowKeys")
-        defaults.setInteger(currentKeyNo, forKey: "currentKeyNo")
-        defaults.setInteger(totalKeyCompleted, forKey: "totalKeyCompleted")
-        defaults.setInteger(totalCorrect, forKey: "totalCorrect")
-        defaults.setInteger(totalWrong, forKey: "totalWrong")
-        defaults.setInteger(timeS, forKey: "timeS")
-        defaults.setInteger(timeM, forKey: "timeM")
-        defaults.setInteger(timeH, forKey: "timeH")
-        defaults.setInteger(levelNo, forKey: "levelNo")
-        indexOfSelectedKey = (thisLineView.indexOfSelectedKey)
-        indexOfSelectedKey -= thisLineView.diffrence
-        whichKey = (thisLineView.whichKey)
-        whichKey -= 1
-       // NSLog("WhichKey=%d", whichKey)
-        defaults.setInteger(indexOfSelectedKey, forKey: "indexOfSelectedKey")
-        defaults.setInteger(whichKey, forKey: "whichKey")
-        defaults.setObject(generatedKeyArray, forKey: "generatedKeyArray")
-        defaults.setObject(PressedKeyArray, forKey: "PressedKeyArray")
-        defaults.setObject(gameLevel, forKey: "LevelCurrent")
-        defaults.setObject(gameMode, forKey: "ModeCurrent")
-        defaults.synchronize()
+            let defaults = NSUserDefaults.standardUserDefaults()
+            defaults.setBool(true, forKey: "isCurrentGame")
+            defaults.setInteger(totalKeys, forKey: "totalKeys")
+            defaults.setInteger(totalShowKeys, forKey: "totalShowKeys")
+            defaults.setInteger(currentKeyNo, forKey: "currentKeyNo")
+            defaults.setInteger(totalKeyCompleted, forKey: "totalKeyCompleted")
+            defaults.setInteger(totalCorrect, forKey: "totalCorrect")
+            defaults.setInteger(totalWrong, forKey: "totalWrong")
+            defaults.setInteger(timeS, forKey: "timeS")
+            defaults.setInteger(timeM, forKey: "timeM")
+            defaults.setInteger(timeH, forKey: "timeH")
+            defaults.setInteger(levelNo, forKey: "levelNo")
+            indexOfSelectedKey = (thisLineView.indexOfSelectedKey)
+            indexOfSelectedKey -= thisLineView.diffrence
+            whichKey = (thisLineView.whichKey)
+            whichKey -= 1
+            // NSLog("WhichKey=%d", whichKey)
+            defaults.setInteger(indexOfSelectedKey, forKey: "indexOfSelectedKey")
+            defaults.setInteger(whichKey, forKey: "whichKey")
+            defaults.setObject(generatedKeyArray, forKey: "generatedKeyArray")
+            defaults.setObject(PressedKeyArray, forKey: "PressedKeyArray")
+            defaults.setObject(gameLevel, forKey: "LevelCurrent")
+            defaults.setObject(gameMode, forKey: "ModeCurrent")
+            defaults.synchronize()
         }
-        self.stopTuner()
+
+        }
+      else{
+        let thisLineView : HardGraphView = pianoView2()
+        if generatedKeyArray.count > 0 {
+            let defaults = NSUserDefaults.standardUserDefaults()
+            defaults.setBool(true, forKey: "isCurrentGame")
+            defaults.setInteger(totalKeys, forKey: "totalKeys")
+            defaults.setInteger(totalShowKeys, forKey: "totalShowKeys")
+            defaults.setInteger(currentKeyNo, forKey: "currentKeyNo")
+            defaults.setInteger(totalKeyCompleted, forKey: "totalKeyCompleted")
+            defaults.setInteger(totalCorrect, forKey: "totalCorrect")
+            defaults.setInteger(totalWrong, forKey: "totalWrong")
+            defaults.setInteger(timeS, forKey: "timeS")
+            defaults.setInteger(timeM, forKey: "timeM")
+            defaults.setInteger(timeH, forKey: "timeH")
+            defaults.setInteger(levelNo, forKey: "levelNo")
+            indexOfSelectedKey = (thisLineView.indexOfSelectedKey)
+            indexOfSelectedKey -= thisLineView.diffrence
+            whichKey = (thisLineView.whichKey)
+            whichKey -= 1
+            // NSLog("WhichKey=%d", whichKey)
+            defaults.setInteger(indexOfSelectedKey, forKey: "indexOfSelectedKey")
+            defaults.setInteger(whichKey, forKey: "whichKey")
+            defaults.setObject(generatedKeyArray, forKey: "generatedKeyArray")
+            defaults.setObject(PressedKeyArray, forKey: "PressedKeyArray")
+            defaults.setObject(gameLevel, forKey: "LevelCurrent")
+            defaults.setObject(gameMode, forKey: "ModeCurrent")
+            defaults.synchronize()
+        }
+
+        }
+               self.stopTuner()
         timer?.invalidate()
         
     }
@@ -257,27 +395,72 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         
         UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
             
-            let thisLineView : lineView = self.pianoView()
-            thisLineView.decreaseSelectedIndex()
-            self.indexOfSelectedKey = (thisLineView.indexOfSelectedKey)
-            self.whichKey = (thisLineView.whichKey)
-            self.whichKey -= 1
-            thisLineView.selectedKeyView.center = CGPointMake(-100, thisLineView.selectedKeyView.center.y)
+            
+            if self.gameLevel == "Medium"{
+                let thisLineView  = self.pianoView1()
+                thisLineView.decreaseSelectedIndex()
+                self.indexOfSelectedKey = (thisLineView.indexOfSelectedKey)
+                self.whichKey = (thisLineView.whichKey)
+                self.whichKey -= 1
+                thisLineView.selectedKeyView.center = CGPointMake(-100, thisLineView.selectedKeyView.center.y)
+            }
+            else if self.gameLevel == "Hard"{
+                let thisLineView  = self.pianoView2()
+                thisLineView.decreaseSelectedIndex()
+                self.indexOfSelectedKey = (thisLineView.indexOfSelectedKey)
+                self.whichKey = (thisLineView.whichKey)
+                self.whichKey -= 1
+                thisLineView.selectedKeyView.center = CGPointMake(-100, thisLineView.selectedKeyView.center.y)
+            }
+            else{
+               let thisLineView  = self.pianoView()
+                thisLineView.decreaseSelectedIndex()
+                self.indexOfSelectedKey = (thisLineView.indexOfSelectedKey)
+                self.whichKey = (thisLineView.whichKey)
+                self.whichKey -= 1
+                thisLineView.selectedKeyView.center = CGPointMake(-100, thisLineView.selectedKeyView.center.y)
+            }
+            
+            
             }, completion: nil)
         
         
         
     }
     func startGame(){
-        
+       if gameLevel == "Medium"{
+        let thisLineView : MediumGraphView = pianoView1()
+        if  indexOfSelectedKey <= -1{
+            indexOfSelectedKey = 0
+        }
+        // NSLog("index =%d", indexOfSelectedKey)
+        thisLineView.indexOfSelectedKey = indexOfSelectedKey
+        thisLineView.whichKey = whichKey
+        thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+
+        }
+       else if gameLevel == "Easy"{
         let thisLineView : lineView = pianoView()
         if  indexOfSelectedKey <= -1{
             indexOfSelectedKey = 0
         }
-          // NSLog("index =%d", indexOfSelectedKey)
-            thisLineView.indexOfSelectedKey = indexOfSelectedKey
-            thisLineView.whichKey = whichKey
-            thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+        // NSLog("index =%d", indexOfSelectedKey)
+        thisLineView.indexOfSelectedKey = indexOfSelectedKey
+        thisLineView.whichKey = whichKey
+        thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+
+        }
+       else{
+        let thisLineView : HardGraphView = pianoView2()
+        if  indexOfSelectedKey <= -1{
+            indexOfSelectedKey = 0
+        }
+        // NSLog("index =%d", indexOfSelectedKey)
+        thisLineView.indexOfSelectedKey = indexOfSelectedKey
+        thisLineView.whichKey = whichKey
+        thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+ 
+        }
             flashKeyLabel?.text = generatedKeyArray[currentKeyNo]
          
             dispatch_async(dispatch_get_main_queue()) {
@@ -304,11 +487,13 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
             }
         
         
-           self.startTuner()
+        
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
         dispatch_after(delayTime, dispatch_get_main_queue()){
             
             self.tuner?.isDataToBeSent = true
+            self.tuner?.keyToBeDetected = self.generatedKeyArray[self.currentKeyNo]
+            self.startTuner()
            // self.tuner?.microphone.start()
         }
         
@@ -348,7 +533,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         
     }
     @IBAction func didStopButton(button: UIButton) {
-        tuner?.stop()
+      //  tuner?.stop()
         timer?.invalidate()
         timer = nil
         let alert = UIAlertController(title: "Alert", message: "Do you want to stop?", preferredStyle: UIAlertControllerStyle.Alert)
@@ -359,7 +544,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         }))
         alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler:    {(alert :UIAlertAction!) in
             self.timer   =    NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "update", userInfo: nil, repeats: true)
-            self.tuner?.start()
+          //  self.tuner?.start()
             self.tuner?.isDataToBeSent = true
            // self.tuner?.microphone.start()
             
@@ -498,81 +683,55 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         }
         else{
             ++levelNo;
-            var keyArray : [String] = ["C2","D2","E2","F2","A2","B2","C3","D3","E3","F3","A3","B3"]
-            var keyArrayTrible : [String] = ["C4","D4","E4","F4","A4","B4","C5","D5","E5","F5","A5","B5","C6"]
-            var keyArrayEassy : [String] = ["C3","D3","E3","F3","A3","B3"]
-            var keyArrayTribleEassy : [String] = ["C4","D4","E4","F4","A4","B4"]
-            if isTestingMode == true{
-                generatedKeyArray.removeAll()
-                let tempAray : [String] = PressedKeyArray
-                PressedKeyArray.removeAll()
-                generatedKeyArray = tempAray
+            var keyArray : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3","F3","G3","A3","B3"]
+            var keyArrayTrible : [String] = ["C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"]
+            var keyArrayEassy : [String] = ["C3","D3","E3","F3","G3","A3","B3"]
+            var keyArrayTribleEassy : [String] = ["C4","D4","E4","F4","G4","A4","B4"]
+            if isTestingMode == true && gameLevel != "Hard"{
                 
+                generatedKeyArray.removeAll()
+                
+                PressedKeyArray.removeAll()
+                generatedKeyArray = (delegate?.getEasyKeyArray())!
+
+                
+            }
+            else if isTestingMode == true && gameLevel == "Hard"{
+                generatedKeyArray.removeAll()
+                
+                PressedKeyArray.removeAll()
+                generatedKeyArray = (delegate?.getHardKeyArray())!
             }
             else{
             generatedKeyArray.removeAll()
             PressedKeyArray.removeAll()
-            
             if gameLevel == "Hard"{
-                for var j = 0; j < totalShowKeys/4; ++j{
-                    srand(UInt32(time(nil)))
-                    let groupNo = Int(arc4random_uniform(UInt32( 2)))
-                    srand(UInt32(time(nil)))
-                    if groupNo == 1 {
-                        for var j=0;j < totalShowKeys/3;++j{
-                            let i = Int(arc4random_uniform(UInt32( keyArray.count)))
-                            
-                            generatedKeyArray.append( keyArray[i])
-                            
-                        }
-                    }
-                    else{
-                        for var j=0;j<totalShowKeys/3;++j{
-                            let i = Int(arc4random_uniform(UInt32( keyArrayTrible.count)))
-                            
-                            generatedKeyArray.append( keyArrayTrible[i])
-                            
-                        }
-                    }
-                  //  NSLog("Array=%@", generatedKeyArray)
+                generatedKeyArray = (delegate?.HardKeyArray())!
                 }
-            }
+                else if gameLevel == "Medium"{
+                generatedKeyArray = (delegate?.MediumKeyArray())!
+                }
             else{
-                for var j = 0; j < totalShowKeys/4; ++j{
-                    srand(UInt32(time(nil)))
-                    let groupNo = Int(arc4random_uniform(UInt32( 2)))
-                    srand(UInt32(time(nil)))
-                    if groupNo == 1 {
-                        for var j=0;j < totalShowKeys/3;++j{
-                            let i = Int(arc4random_uniform(UInt32( keyArrayEassy.count)))
-                            
-                            generatedKeyArray.append( keyArrayEassy[i])
-                            
-                        }
-                    }
-                    else{
-                        for var j=0;j<totalShowKeys/3;++j{
-                            let i = Int(arc4random_uniform(UInt32( keyArrayTribleEassy.count)))
-                            
-                            generatedKeyArray.append( keyArrayTribleEassy[i])
-                            
-                        }
-                    }
-                   // NSLog("Array=%@", generatedKeyArray)
+                generatedKeyArray = (delegate?.EasyKeyArray())!
                 }
-            }
-            }
+           }
 
             currentKeyNo = 0
             indexOfSelectedKey=0
             whichKey = 0
             self.drawUI()
-            let thisLineView : lineView = pianoView()
-           
-        //    NSLog("index =%d", indexOfSelectedKey)
-            thisLineView.indexOfSelectedKey = indexOfSelectedKey
-//            thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
-//            flashKeyLabel?.text = generatedKeyArray[currentKeyNo]
+            if gameLevel == "Medium"{
+             let thisLineView : MediumGraphView = pianoView1()
+             thisLineView.indexOfSelectedKey = indexOfSelectedKey
+            }
+            else if gameLevel == "Hard"{
+                let thisLineView : HardGraphView = pianoView2()
+                thisLineView.indexOfSelectedKey = indexOfSelectedKey
+            }
+            else{
+             let thisLineView : lineView = pianoView()
+             thisLineView.indexOfSelectedKey = indexOfSelectedKey
+            }
             
             dispatch_async(dispatch_get_main_queue()) {
                 
@@ -604,12 +763,36 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                 
             }
             UIView.animateWithDuration(0.05, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                let  pianoPage : lineView = self.notePageArray[self.levelNo-1] as! lineView
-                var rectView : CGRect = pianoPage.frame
-                rectView.origin.x = 0
+                if self.gameLevel == "Medium"{
+                    let  pianoPage : MediumGraphView = self.notePageArray[self.levelNo-1] as! MediumGraphView
+                    var rectView : CGRect = pianoPage.frame
+                    rectView.origin.x = 0
+                    
+                    
+                    pianoPage.frame = rectView
+                }
+                else if self.gameLevel == "Easy"{
+//                    let thisLineView : lineView = self.notePageArray[self.levelNo-1] as! lineView
+//                    thisLineView.indexOfSelectedKey = self.indexOfSelectedKey
+//                    thisLineView.whichKey = self.whichKey
+//                    thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+                    
+                    let  pianoPage : lineView = self.notePageArray[self.levelNo-1] as! lineView
+                    var rectView : CGRect = pianoPage.frame
+                    rectView.origin.x = 0
+                    
+                    
+                    pianoPage.frame = rectView
+                }
+                else{
+                    let  pianoPage : HardGraphView = self.notePageArray[self.levelNo-1] as! HardGraphView
+                    var rectView : CGRect = pianoPage.frame
+                    rectView.origin.x = 0
+                    
+                    
+                    pianoPage.frame = rectView
+                }
                 
-               
-                pianoPage.frame = rectView
                 
                 }, completion : { finished in
                     self.startButton?.enabled = false
@@ -621,17 +804,33 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                     
                     self.tuner?.cutoffAmplitude = Float( self.toDB)
                     
-                    self.tuner?.start()
+                   // self.tuner?.start()
                     
-                    self.timer   =    NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "update", userInfo: nil, repeats: true)
+                   // self.timer   =    NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "update", userInfo: nil, repeats: true)
                     
                     if  self.indexOfSelectedKey <= -1{
                         self.indexOfSelectedKey = 0
                     }
                  //   NSLog("index =%d", self.indexOfSelectedKey)
-                    thisLineView.indexOfSelectedKey = self.indexOfSelectedKey
-                    thisLineView.whichKey = self.whichKey
-                    thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+                    if self.gameLevel == "Medium"{
+                        let thisLineView : MediumGraphView = self.pianoView1()
+                        thisLineView.indexOfSelectedKey = self.indexOfSelectedKey
+                        thisLineView.whichKey = self.whichKey
+                        thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+                    }
+                    else if self.gameLevel == "Easy"{
+                        let thisLineView : lineView = self.pianoView()
+                        thisLineView.indexOfSelectedKey = self.indexOfSelectedKey
+                        thisLineView.whichKey = self.whichKey
+                        thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+                    }
+                    else{
+                        let thisLineView : HardGraphView = self.pianoView2()
+                        thisLineView.indexOfSelectedKey = self.indexOfSelectedKey
+                        thisLineView.whichKey = self.whichKey
+                        thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+                    }
+                    
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
                     dispatch_after(delayTime, dispatch_get_main_queue()){
                         
@@ -660,7 +859,8 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                         self.flashKeyLabel?.text = self.generatedKeyArray[self.currentKeyNo]
                         self.correctButton!.setTitle( String(format: "%d",self.totalCorrect), forState: UIControlState.Normal)
                         self.wrongButton!.setTitle(String(format: "%d",self.totalWrong), forState: UIControlState.Normal)
-                        
+                        self.tuner?.keyToBeDetected = self.generatedKeyArray[self.currentKeyNo]
+                       // self.tuner?.start()
                         
                     }
                     
@@ -742,9 +942,9 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
     // MARK: TunerDelegate
     
     func tunerDidUpdate(tuner: Tuner, output: TunerOutput) {
-        let thisLineView : lineView = pianoView()
+     //   let thisLineView : lineView = pianoView()
     let key = output.pitch + "\(output.octave)"
-        self.tuner?.microphone
+     //   tuner.stop()
         //lineView1?.animateKey(key)
         NSLog("Key=%@,True Key=%@", key,generatedKeyArray[currentKeyNo])
     if key .isEqual(generatedKeyArray[currentKeyNo]) == true{
@@ -755,12 +955,24 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
             PressedKeyArray.append( generatedKeyArray[currentKeyNo++])
             ++totalKeyCompleted
             self.pressedKeysLabel?.text = PressedKeyArray.joinWithSeparator(",")
-            thisLineView.animateKey(key, withColor: UIColor.blueColor())
+            if self.gameLevel == "Medium"{
+                let thisLineView : MediumGraphView = self.pianoView1()
+                thisLineView.animateKey(key, withColor: UIColor.blueColor())
+            }
+            else if self.gameLevel == "Easy"{
+                let thisLineView : lineView = self.pianoView()
+                thisLineView.animateKey(key, withColor: UIColor.blueColor())
+            }
+            else{
+                let thisLineView : HardGraphView = self.pianoView2()
+                thisLineView.animateKey(key, withColor: UIColor.blueColor())
+            }
+            
             self.flashKeyLabel?.text = ""
             startButton?.enabled = true
             resumeButton?.enabled = false
-            timer?.invalidate()
-            self.stopTuner()
+            //timer?.invalidate()
+            //self.stopTuner()
             self.nextUI()
             
             
@@ -777,9 +989,24 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                                         result1 = result1 + " ," + PressedKeyArray[j]
                                     }
                                 }
+                              if self.gameLevel == "Medium"{
+                                   let thisLineView : MediumGraphView = self.pianoView1()
+                                    thisLineView.animateKey(key, withColor: UIColor.blueColor())
+                                 thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+                               }
+                            else if self.gameLevel == "Easy"{
+                                   let thisLineView : lineView = self.pianoView()
+                                    thisLineView.animateKey(key, withColor: UIColor.blueColor())
+                                 thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+                                }
+                              else{
+                                let thisLineView : HardGraphView = self.pianoView2()
                                 thisLineView.animateKey(key, withColor: UIColor.blueColor())
-                                self.pressedKeysLabel?.text = result1
                                 thisLineView.selectKey(self.generatedKeyArray[self.currentKeyNo])
+                               }
+            
+                                self.pressedKeysLabel?.text = result1
+            
                                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
                                dispatch_after(delayTime, dispatch_get_main_queue()){
                 
@@ -788,7 +1015,8 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                                 
                                }
                                 self.flashKeyLabel?.text = self.generatedKeyArray[self.currentKeyNo]
-                                
+                                self.tuner?.keyToBeDetected = self.generatedKeyArray[self.currentKeyNo]
+                               // self.tuner?.start()
                                 
                             }
                             
@@ -830,10 +1058,22 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                                 
                             }
                            }
-                           thisLineView.animateKey(key, withColor: UIColor.redColor())
+        if self.gameLevel == "Medium"{
+            let thisLineView : MediumGraphView = self.pianoView1()
+            thisLineView.animateKey(key, withColor: UIColor.redColor())
+        }
+        else if self.gameLevel == "Easy"{
+            let thisLineView : lineView = self.pianoView()
+           thisLineView.animateKey(key, withColor: UIColor.redColor())
+        }
+        else{
+            let thisLineView : HardGraphView = self.pianoView2()
+            thisLineView.animateKey(key, withColor: UIColor.redColor())
+        }
+        
                            ++totalWrong
                            wrongButton!.setTitle(String(format: "%d",totalWrong), forState: UIControlState.Normal)
-                          let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
+                          let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1  ))
                           dispatch_after(delayTime, dispatch_get_main_queue()){
                           
                                 self.tuner?.isDataToBeSent = true

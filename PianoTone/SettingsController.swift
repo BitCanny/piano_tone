@@ -36,7 +36,7 @@ class SettingsController: UIViewController,NIDropDownDelegate,UITextFieldDelegat
         
         
         let ampLevel : Double = defaults.doubleForKey("amplitudeLevel")
-        if ampLevel == 0.006 {
+        if ampLevel == 0.008 {
             amplitudeButton?.setTitle("Silence", forState: .Normal)
         
         }
@@ -79,10 +79,10 @@ class SettingsController: UIViewController,NIDropDownDelegate,UITextFieldDelegat
             let defaults = NSUserDefaults.standardUserDefaults()
             let ampLevelStr = amplitudeButton?.titleLabel?.text
             if ampLevelStr == "Silence"{
-                defaults.setDouble(0.006, forKey: "amplitudeLevel")
+                defaults.setDouble(0.008, forKey: "amplitudeLevel")
             }
             else{
-                defaults.setDouble(0.05, forKey: "amplitudeLevel")
+                defaults.setDouble(0.03, forKey: "amplitudeLevel")
             }
             defaults.synchronize()
             if isChanged == false{

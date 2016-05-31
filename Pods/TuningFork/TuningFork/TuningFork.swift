@@ -124,6 +124,7 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
     public var delegate: TunerDelegate?
     public var timerTime: Double
     public var cutoffAmplitude : Float
+    public var keyToBeDetected : String
     private let threshold: Float
     public let microphone: AKMicrophone
     private let analyzer: AKAudioAnalyzer
@@ -131,11 +132,13 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
     private var oldKey : String = ""
     private var olderKey : String = ""
     public var isDataToBeSent : Bool = true
+    public var isDataToBeSent1 : Bool = true
     var keyFreq : Int = 0
     private var freqArray : [Float] = []
     private var ampArray : [Float] = []
     private var freqToSend : Float = 0
     private var ampToSend : Float = 0
+    var fIntArray : [Int] = []
     /**
     Initializes a new Tuner.
     
@@ -143,8 +146,9 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
     */
     public init(threshold: Float = 0.0) {
         self.timerTime = 0.01
-        self.cutoffAmplitude = 0.001
+        self.cutoffAmplitude = 0.03
         self.threshold = abs(threshold)
+        self.keyToBeDetected=""
         isDataToBeSent = true
         microphone = AKMicrophone()
         analyzer = AKAudioAnalyzer(input: microphone.output)
@@ -167,18 +171,26 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
                 let a = self.analyzer.trackedAmplitude.value
                 if a > self.cutoffAmplitude
                 {
+                     NSLog("Key=%@",self.getKey(f))
+                    
                     let dataType : Bool = self.isReliableData(f, amplitude: a )
                     if dataType == true  {
-                        let output = Tuner.newOutput(f,a)
+                        let output = Tuner.newOutput(self.freqToSend,self.ampToSend)
                         self.isDataToBeSent = false
+                        self.microphone.restart()
                         dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                  d.tunerDidUpdate(self, output: output)
+                            //self.microphone.start()
+                           // self.oldKey = ""
+                            //self.olderKey = ""
+                          //  self.keyFreq = 0
                             })
                      }
+
                 }
                 else
                 {
-                    NSLog("XXXXXXXXXXAmp=%f,Freq=%f,Cut=%f", a,f,self.cutoffAmplitude)
+                    //NSLog("XXXXXXXXXXAmp=%f,Freq=%f,Cut=%f", a,f,self.cutoffAmplitude)
                     self.oldKey = ""
                     self.olderKey = ""
                     self.keyFreq = 0
@@ -190,7 +202,6 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
         
         timer?.start(true)
     }
-    
     /**
     Stops the tuner.
     */
@@ -204,12 +215,11 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
         keyFreq = 0
     }
 
-
-   func isReliableData(frequency: Float, amplitude: Float) -> Bool{
+      func isReliableData(frequency: Float, amplitude: Float) -> Bool{
        
-       if isDataToBeSent == false{
-            return false
-       }
+//       if isDataToBeSent == false{
+//            return false
+//       }
        var norm = frequency
        
        while norm > frequencies[frequencies.count - 1] {
@@ -232,25 +242,40 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
        let pitch = String(format: "%@", sharps[i % sharps.count], flats[i % flats.count])
        let octave = i / 12
        let key = pitch + "\(octave)"
-       
-//        if fabs(min) > 0.5 {
+//        if keyToBeDetected .isEqual(key){
+//            keyToBeDetected = ""
+//            microphone.restart()
+//            analyzer.restart()
+//            
+//            return true
+//        }
+//        if fabs(min) > 0.3 {
 //            return false
 //       }
        if olderKey .isEqual(key){
         
            return false
        }
+//        if olderKey.isEqual("C2") && key.containsString("#"){
+//            return false
+//        }
+        
        if oldKey .isEqual(key){
            
             ++keyFreq;
             if keyFreq == 2 {
-                NSLog("KeyToSend=%@,Freq=%f,diff=%f,I=%d", key,frequency,min,i)
+                NSLog("KeyToSend=%@,Freq=%f,diff=%f,I=%d times=%d", key,frequency,min,i,keyFreq)
                 result = true
                 olderKey = key
+                
+                freqToSend = frequency
+                ampToSend = amplitude
                
                  }
             
              }
+        
+       
          else{
                   self.keyFreq = 1
                   self.oldKey = key
@@ -260,6 +285,7 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
         
         return result
     }
+  
     static func newOutput(frequency: Float, _ amplitude: Float) -> TunerOutput {
         let output = TunerOutput()
         
@@ -287,8 +313,9 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
         output.amplitude = amplitude
         output.distance = frequency - frequencies[i]
         output.pitch = String(format: "%@", sharps[i % sharps.count], flats[i % flats.count])
-       // let key = output.pitch + "\(output.octave)"
-       // NSLog("KeyToSend=%@", key)
+        let key = output.pitch + "\(output.octave)"
+       NSLog("KeyToSend=%@", key)
+       
         return output
     }
     

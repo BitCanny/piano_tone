@@ -100,16 +100,27 @@ class HistoryController: UIViewController,UITableViewDelegate,UITableViewDataSou
         view.drawRowFor(dataRecord)
         self.view.addSubview(view)
         cell.addSubview(view)
-        
-        
-        
         return cell
-        
-        
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
        
+    }
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true;
+    }
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete{
+            recordDBArray.removeObjectAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            let rootPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, .UserDomainMask, true)[0]
+            var plistPathInDocument:String = String()
+            plistPathInDocument = rootPath.stringByAppendingString("/RecordsArray.plist")
+            //if !NSFileManager.defaultManager().fileExistsAtPath(plistPathInDocument){
+            recordDBArray.writeToFile(plistPathInDocument, atomically: true)
+                    
+            //}
+        }
     }
     /*
     // MARK: - Navigation

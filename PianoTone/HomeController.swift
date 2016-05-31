@@ -16,6 +16,7 @@ class HomeController: UIViewController {
     @IBOutlet    var challengeButton: UIButton?
     @IBOutlet    var easyButton: UIButton?
     @IBOutlet    var hardButton: UIButton?
+    @IBOutlet    var mediumButton: UIButton?
     @IBOutlet    var preKeyButton: UIButton?
   
      var generatedKeyArray : [String] = []
@@ -35,11 +36,11 @@ class HomeController: UIViewController {
     var gameMode     : String = "Challenge"
     var gameLevel     : String = "Hard"
 //    var keyArray : [String] = ["C2","D2","E2","F2","A2","B2","C3","D3","E3","F3","A3","B3","C4","D4","E4","F4","A4","B4","C5","D5","E5","F5","A5","B5","C6"]
-   var keyArray : [String] = ["C2","D2","E2","F2","A2","B2","C3","D3","E3","F3","A3","B3"]
-    var keyArrayTrible : [String] = ["C4","D4","E4","F4","A4","B4","C5","D5","E5","F5","A5","B5","C6"]
+   var keyArray : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3","F3","G3","A3","B3"]
+    var keyArrayTrible : [String] = ["C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"]
     
-    var keyArrayEassy : [String] = ["C3","D3","E3","F3","A3","B3"]
-    var keyArrayTribleEassy : [String] = ["C4","D4","E4","F4","A4","B4"]
+    var keyArrayEassy : [String] = ["C3","D3","E3","F3","G3","A3","B3"]
+    var keyArrayTribleEassy : [String] = ["C4","D4","E4","F4","G4","A4","B4"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,6 +157,11 @@ class HomeController: UIViewController {
         hardButton?.layer.borderWidth = 1.0
         hardButton?.layer.borderColor = UIColor.whiteColor().CGColor
         
+        mediumButton?.layer.masksToBounds = true
+        mediumButton?.layer.cornerRadius = 20.0
+        mediumButton?.layer.borderWidth = 1.0
+        mediumButton?.layer.borderColor = UIColor.whiteColor().CGColor
+        
         
         let defaults = NSUserDefaults.standardUserDefaults()
        
@@ -194,18 +200,36 @@ class HomeController: UIViewController {
         
         if level.caseInsensitiveCompare("Easy") == NSComparisonResult.OrderedSame {
             easyButton?.backgroundColor = UIColor.whiteColor()
-            hardButton?.backgroundColor = UIColor.clearColor()
-            
             easyButton?.titleLabel?.textColor = UIColor.blackColor()
+            
+            hardButton?.backgroundColor = UIColor.clearColor()
             hardButton?.titleLabel?.textColor = UIColor.whiteColor()
             
+            mediumButton?.backgroundColor = UIColor.clearColor()
+            mediumButton?.titleLabel?.textColor = UIColor.whiteColor()
+           
+            
+        }
+        else if level.caseInsensitiveCompare("Medium") == NSComparisonResult.OrderedSame {
+            
+            easyButton?.backgroundColor = UIColor.clearColor()
+            easyButton?.titleLabel?.textColor = UIColor.whiteColor()
+            
+            hardButton?.backgroundColor = UIColor.clearColor()
+            hardButton?.titleLabel?.textColor = UIColor.whiteColor()
+            
+            mediumButton?.backgroundColor = UIColor.whiteColor()
+            mediumButton?.titleLabel?.textColor = UIColor.blackColor()
         }
         else{
             easyButton?.backgroundColor = UIColor.clearColor()
-            hardButton?.backgroundColor = UIColor.whiteColor()
-            
-            hardButton?.titleLabel?.textColor = UIColor.blackColor()
             easyButton?.titleLabel?.textColor = UIColor.whiteColor()
+            
+            hardButton?.backgroundColor = UIColor.whiteColor()
+            hardButton?.titleLabel?.textColor = UIColor.blackColor()
+            
+            mediumButton?.backgroundColor = UIColor.clearColor()
+            mediumButton?.titleLabel?.textColor = UIColor.whiteColor()
         }
       
         
@@ -462,66 +486,41 @@ class HomeController: UIViewController {
         generatedKeyArray.removeAll()
         PressedKeyArray.removeAll()
        if defaults.boolForKey("isUsePreKeys") == true{
-           if gameLevel == "Hard"{
+        if gameLevel == "Easy"{
             let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            appDelegate.hardArrayIndex = -1
+            generatedKeyArray = appDelegate.getEasyKeyArray()
+        }
+        else  if gameLevel == "Medium"{
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            appDelegate.hardArrayIndex = -1
+            
+            generatedKeyArray = appDelegate.getMediumKeyArray()
+        }
+        else{
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            appDelegate.hardArrayIndex = -1
             generatedKeyArray = appDelegate.getHardKeyArray()
+            
         }
-           else{
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            generatedKeyArray = appDelegate.generatedEasyKeyArray
-        }
+        
         }
        else{
        if gameLevel == "Hard"{
-        for var j = 0; j < totalShowKeys/4; ++j{
-        srand(UInt32(time(nil)))
-        let groupNo = Int(arc4random_uniform(UInt32( 2)))
-        srand(UInt32(time(nil)))
-        if groupNo == 1 {
-        for var j=0;j < totalShowKeys/3;++j{
-            let i = Int(arc4random_uniform(UInt32( keyArray.count)))
-            
-            generatedKeyArray.append( keyArray[i])
-            
-        }
-        }
-        else{
-            for var j=0;j<totalShowKeys/3;++j{
-                let i = Int(arc4random_uniform(UInt32( keyArrayTrible.count)))
-                
-                generatedKeyArray.append( keyArrayTrible[i])
-                
-            }
-        }
-          NSLog("Array=%@", generatedKeyArray)
-        }
-        }
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+         generatedKeyArray = appDelegate.HardKeyArray()
+       }
+        else if gameLevel == "Medium"{
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        generatedKeyArray = appDelegate.MediumKeyArray()
+       }
        else{
-        for var j = 0; j < totalShowKeys/4; ++j{
-            srand(UInt32(time(nil)))
-            let groupNo = Int(arc4random_uniform(UInt32( 2)))
-            srand(UInt32(time(nil)))
-            if groupNo == 1 {
-                for var j=0;j < totalShowKeys/3;++j{
-                    let i = Int(arc4random_uniform(UInt32( keyArrayEassy.count)))
-                    
-                    generatedKeyArray.append( keyArrayEassy[i])
-                    
-                }
-            }
-            else{
-                for var j=0;j<totalShowKeys/3;++j{
-                    let i = Int(arc4random_uniform(UInt32( keyArrayTribleEassy.count)))
-                    
-                    generatedKeyArray.append( keyArrayTribleEassy[i])
-                    
-                }
-            }
-            NSLog("Array=%@", generatedKeyArray)
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+          generatedKeyArray = appDelegate.EasyKeyArray()
         }
         }
-        }
-        NSLog("Array=%@", generatedKeyArray)
+        
         currentKeyNo=0;
         totalKeyCompleted = 0
         self.totalWrong = 0
@@ -588,15 +587,15 @@ class HomeController: UIViewController {
         gameLevel =  defaults.objectForKey("Level") as! String
         let appDelegate : AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         if gameLevel == "Easy"{
-             generatedKeyArray = appDelegate.generatedEasyKeyArray
+             generatedKeyArray = appDelegate.getEasyKeyArray()
+        }
+        else  if gameLevel == "Medium"{
+            generatedKeyArray = appDelegate.getMediumKeyArray()
         }
         else{
-             generatedKeyArray = appDelegate.generatedHardKeyArray
+             generatedKeyArray = appDelegate.getHardKeyArray()
         }
        
-        
-        NSLog("Array=%@", generatedKeyArray)
-        
         let pianoController = self.storyboard?.instantiateViewControllerWithIdentifier("ViewController") as? ViewController
         pianoController?.currentKeyNo = currentKeyNo
         pianoController?.generatedKeyArray = generatedKeyArray
@@ -615,7 +614,7 @@ class HomeController: UIViewController {
         pianoController!.gameMode = gameMode
         pianoController!.gameLevel = gameLevel
         pianoController!.isTestingMode = true
-        NSLog("Mode=%@,Level=%@", gameMode,gameLevel)
+        
         self.navigationController?.pushViewController(pianoController!, animated: true)
 
         
@@ -654,10 +653,26 @@ class HomeController: UIViewController {
         defaults.setObject("Hard", forKey: "Level")
         defaults.synchronize()
         easyButton?.backgroundColor = UIColor.clearColor()
-        hardButton?.backgroundColor = UIColor.whiteColor()
-        
-        hardButton?.titleLabel?.textColor = UIColor.blackColor()
         easyButton?.titleLabel?.textColor = UIColor.whiteColor()
+        
+        hardButton?.backgroundColor = UIColor.whiteColor()
+        hardButton?.titleLabel?.textColor = UIColor.blackColor()
+        
+        mediumButton?.backgroundColor = UIColor.clearColor()
+        mediumButton?.titleLabel?.textColor = UIColor.whiteColor()
+    }
+    @IBAction func didMediumClick(button: UIButton) {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject("Medium", forKey: "Level")
+        defaults.synchronize()
+        easyButton?.backgroundColor = UIColor.clearColor()
+        easyButton?.titleLabel?.textColor = UIColor.whiteColor()
+        
+        hardButton?.backgroundColor = UIColor.clearColor()
+        hardButton?.titleLabel?.textColor = UIColor.whiteColor()
+        
+        mediumButton?.backgroundColor = UIColor.whiteColor()
+        mediumButton?.titleLabel?.textColor = UIColor.blackColor()
         
     }
     @IBAction func didEasyClick(button: UIButton) {
@@ -665,12 +680,16 @@ class HomeController: UIViewController {
         defaults.setObject("Easy", forKey: "Level")
         defaults.synchronize()
         easyButton?.backgroundColor = UIColor.whiteColor()
-        hardButton?.backgroundColor = UIColor.clearColor()
-        
         easyButton?.titleLabel?.textColor = UIColor.blackColor()
+        
+        hardButton?.backgroundColor = UIColor.clearColor()
         hardButton?.titleLabel?.textColor = UIColor.whiteColor()
         
+        mediumButton?.backgroundColor = UIColor.clearColor()
+        mediumButton?.titleLabel?.textColor = UIColor.whiteColor()
+        
     }
+    
     @IBAction func didChallengeClick(button: UIButton) {
         
         let defaults = NSUserDefaults.standardUserDefaults()
@@ -696,7 +715,13 @@ class HomeController: UIViewController {
         challengeButton?.titleLabel?.textColor = UIColor.whiteColor()
         
     }
-    
+    @IBAction func didInfoClick(button: UIButton) {
+        
+        let pianoController = self.storyboard?.instantiateViewControllerWithIdentifier("SlideShowControllerViewController") as? SlideShowControllerViewController
+        
+        self.navigationController?.pushViewController(pianoController!, animated: true)
+        
+    }
   
     /*
     // MARK: - Navigation

@@ -1,15 +1,14 @@
-
 //
-//  lineView.swift
+//  MediumGraphView.swift
 //  PianoTone
 //
-//  Created by luv mehta on 14/12/15.
-//  Copyright © 2015 luv mehta. All rights reserved.
+//  Created by luv mehta on 29/01/16.
+//  Copyright © 2016 luv mehta. All rights reserved.
 //
 
 import UIKit
 
-class lineView: UIView {
+class MediumGraphView: UIView {
 
     var tribleArray : [CGFloat] = []
     var bassArray : [CGFloat] = []
@@ -51,7 +50,7 @@ class lineView: UIView {
             let fisrtChar  = myNSString.substringWithRange(NSRange(location: 0, length: 1))
             let secondChar = myNSString.substringWithRange(NSRange(location: 2, length: 1))
             let secondNumber = Int(secondChar)
-          //  NSLog("AnimatedKey=%@ secondNumber=%d", key,secondNumber!)
+            //  NSLog("AnimatedKey=%@ secondNumber=%d", key,secondNumber!)
             if secondNumber >= 6 || secondNumber < 2  {
                 return
                 
@@ -71,7 +70,7 @@ class lineView: UIView {
             case "G":
                 firstNumber = 3
                 break
-            
+                
             default:
                 firstNumber = 4
                 break
@@ -82,25 +81,25 @@ class lineView: UIView {
                 return
                 
             }
-           
-                let button : UIButton = sharpButtonArray[firstNumber] as! UIButton
-                button.backgroundColor = withColor
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
-                dispatch_after(delayTime, dispatch_get_main_queue()){
-                    let button : UIButton = self.sharpButtonArray[firstNumber] as! UIButton
-                    button.backgroundColor = UIColor.blackColor()
-                }
-                
-           
-           
-
+            
+            let button : UIButton = sharpButtonArray[firstNumber] as! UIButton
+            button.backgroundColor = withColor
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
+            dispatch_after(delayTime, dispatch_get_main_queue()){
+                let button : UIButton = self.sharpButtonArray[firstNumber] as! UIButton
+                button.backgroundColor = UIColor.blackColor()
+            }
+            
+            
+            
+            
             
         }
         else{
             let fisrtChar  = myNSString.substringWithRange(NSRange(location: 0, length: 1))
             let secondChar = myNSString.substringWithRange(NSRange(location: 1, length: 1))
             let secondNumber = Int(secondChar)
-       //     NSLog("AnimatedKey=%@ secondNumber=%d", key,secondNumber!)
+            //     NSLog("AnimatedKey=%@ secondNumber=%d", key,secondNumber!)
             if secondNumber > 6 || secondNumber < 2  {
                 return
                 
@@ -136,66 +135,66 @@ class lineView: UIView {
                 return
                 
             }
-                            let button : UIButton = buttonArray[firstNumber] as! UIButton
-                button.backgroundColor = withColor
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
-                dispatch_after(delayTime, dispatch_get_main_queue()){
-                    let button : UIButton = self.buttonArray[firstNumber] as! UIButton
-                    button.backgroundColor = UIColor.whiteColor()
+            let button : UIButton = buttonArray[firstNumber] as! UIButton
+            button.backgroundColor = withColor
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
+            dispatch_after(delayTime, dispatch_get_main_queue()){
+                let button : UIButton = self.buttonArray[firstNumber] as! UIButton
+                button.backgroundColor = UIColor.whiteColor()
                 
-            
+                
             }
         }
-                // self.drawUI()
+        // self.drawUI()
         
     }
     
     func deselectKey(){
-       /*
+        /*
         cutLineCenterArray.removeAll()
         generetedKeyArray.removeAll()
         
-                   for var i=0; i < circleArray.count; ++i{
-                let cirlce : UIImageView = circleArray[i] as! UIImageView
-                cirlce.removeFromSuperview()
-            }
-            circleArray.removeAllObjects()
-            for var i=0; i < lineArray.count; ++i{
-                let line : CAShapeLayer = lineArray[i] as! CAShapeLayer
-                line.removeFromSuperlayer()
-            }
-            lineArray.removeAllObjects()
+        for var i=0; i < circleArray.count; ++i{
+        let cirlce : UIImageView = circleArray[i] as! UIImageView
+        cirlce.removeFromSuperview()
+        }
+        circleArray.removeAllObjects()
+        for var i=0; i < lineArray.count; ++i{
+        let line : CAShapeLayer = lineArray[i] as! CAShapeLayer
+        line.removeFromSuperlayer()
+        }
+        lineArray.removeAllObjects()
         for var i=0; i < redcircleArray.count; ++i{
-            let cirlce : UIImageView = redcircleArray[i] as! UIImageView
-            cirlce.removeFromSuperview()
+        let cirlce : UIImageView = redcircleArray[i] as! UIImageView
+        cirlce.removeFromSuperview()
         }
         redcircleArray.removeAllObjects()
         for var i=0; i < redlineArray.count; ++i{
-            let line : CAShapeLayer = redlineArray[i] as! CAShapeLayer
-            line.removeFromSuperlayer()
+        let line : CAShapeLayer = redlineArray[i] as! CAShapeLayer
+        line.removeFromSuperlayer()
         }
         redlineArray.removeAllObjects()
         generetedKeyArray.removeAll()
         
         for var i=0; i < circleArray.count; ++i{
-            let cirlce : UIImageView = circleArray[i] as! UIImageView
-            cirlce.removeFromSuperview()
+        let cirlce : UIImageView = circleArray[i] as! UIImageView
+        cirlce.removeFromSuperview()
         }
         circleArray.removeAllObjects()
         for var i=0; i < lineArray.count; ++i{
-            let line : CAShapeLayer = lineArray[i] as! CAShapeLayer
-            line.removeFromSuperlayer()
+        let line : CAShapeLayer = lineArray[i] as! CAShapeLayer
+        line.removeFromSuperlayer()
         }
         lineArray.removeAllObjects()
         
-       
+        
         indexOfSelectedKey = 0
-*/
+        */
         
         
     }
     func selectKey(key : String){
-       
+        
       //  NSLog("IndexOfKey=%d", generetedKeyArray.indexOf(key)!)
         
         
@@ -230,13 +229,13 @@ class lineView: UIView {
         }
         
         firstNumber += (secondNumber!-2)*7
-       // NSLog("WhichKey=%d,%d", whichKey,indexOfSelectedKey)
+        // NSLog("WhichKey=%d,%d", whichKey,indexOfSelectedKey)
         if whichKey == 4 || whichKey == 8{
             ++indexOfSelectedKey;
             diffrence = 3
         }
         else{
-         
+            
             diffrence = 2
         }
         ++whichKey
@@ -245,17 +244,17 @@ class lineView: UIView {
             self.selectedKeyView.center = CGPointMake(self.keyCenterArray[self.indexOfSelectedKey + self.startKeyFromButtonNo], self.selectedKeyView.center.y)
             }, completion: nil)
         
-
+        
         if isViewAdded == true{
             
         }
         else{
-           self.addSubview(selectedKeyView)
-           isViewAdded = true
+            self.addSubview(selectedKeyView)
+            isViewAdded = true
         }
         
         indexOfSelectedKey += 2
-       
+        
     }
     func drawKeysWithArray(keyArray : [String]){
         
@@ -273,12 +272,12 @@ class lineView: UIView {
             line.removeFromSuperlayer()
         }
         lineArray.removeAllObjects()
-         let rect = self.frame
+        let rect = self.frame
         var blockWidth : CGFloat = (rect.size.width-30)/29
         var blockWidth1 : CGFloat = (rect.size.height-blockHeight*24-5)
         NSLog("Index=%d", startKeyFromButtonNo)
         var sequenceIndex = startKeyFromButtonNo
-            indexOfSelectedKey = 0
+        indexOfSelectedKey = 0
         for var i = 0; i < keyArray.count; ++i{
             var keyStr = keyArray[i]
             let myNSString = keyStr as NSString
@@ -314,50 +313,48 @@ class lineView: UIView {
             firstNumber += (secondNumber!-2)*7
             
             
-                let imageName = "notes.png"
-                let image = UIImage(named: imageName)
-                let imageView = UIImageView(image: image!)
-                imageView.frame = CGRect(x: 0, y: 0, width: 9*blockWidth/16, height: 9*blockWidth/16)
-                imageView.center = getNoteCenter(firstNumber,sequenceNo: sequenceIndex)
+            let imageName = "notes.png"
+            let image = UIImage(named: imageName)
+            let imageView = UIImageView(image: image!)
+            imageView.frame = CGRect(x: 0, y: 0, width: 9*blockWidth/16, height: 9*blockWidth/16)
+            imageView.center = getNoteCenter(firstNumber,sequenceNo: sequenceIndex)
             sequenceIndex += 2
-                self.addSubview(imageView)
-                circleArray.addObject(imageView)
-                let shape = CAShapeLayer()
+            self.addSubview(imageView)
+            circleArray.addObject(imageView)
+            let shape = CAShapeLayer()
             
-                 self.layer.addSublayer(shape)
-                shape.opacity = 1.0
-                shape.lineWidth = 2
-               shape.lineJoin = kCALineJoinMiter
+            self.layer.addSublayer(shape)
+            shape.opacity = 1.0
+            shape.lineWidth = 2
+            shape.lineJoin = kCALineJoinMiter
             
-               shape.strokeColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).CGColor
-               shape.fillColor = UIColor.clearColor().CGColor
+            shape.strokeColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).CGColor
+            shape.fillColor = UIColor.clearColor().CGColor
             
-              let path = UIBezierPath()
-            
-            if firstNumber < 8 || (firstNumber > 13 && firstNumber < 20 ){
-                if (firstNumber >= 8 && firstNumber <= 13) || (firstNumber >= 20 && firstNumber <= 28){
-                    path.moveToPoint(CGPointMake(imageView.frame.origin.x, imageView.center.y-3*blockHeight))
-                    path.addLineToPoint(CGPointMake(imageView.frame.origin.x,  imageView.center.y))
-                }
-                else{
+            let path = UIBezierPath()
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            if appDelegate.isMediumOnTrible == false{
+            if firstNumber < 8 || firstNumber == 17 || firstNumber == 18 || firstNumber == 19  {
+                path.moveToPoint(CGPointMake(imageView.frame.origin.x+imageView.frame.size.width-1, imageView.center.y-3*blockHeight))
+                path.addLineToPoint(CGPointMake(imageView.frame.origin.x+imageView.frame.size.width-1,  imageView.center.y))
+            }
+            else{
+                path.moveToPoint(CGPointMake(imageView.frame.origin.x,  imageView.center.y))
+                path.addLineToPoint(CGPointMake(imageView.frame.origin.x, imageView.center.y+3*blockHeight ))
+            }
+            }
+            else{
+                if firstNumber < 8 || (firstNumber >= 12 && firstNumber <= 19 )  {
                     path.moveToPoint(CGPointMake(imageView.frame.origin.x+imageView.frame.size.width-1, imageView.center.y-3*blockHeight))
                     path.addLineToPoint(CGPointMake(imageView.frame.origin.x+imageView.frame.size.width-1,  imageView.center.y))
                 }
-               
-            }
-            else{
-                if (firstNumber >= 8 && firstNumber <= 13) || (firstNumber >= 20 && firstNumber <= 28){
+                else{
                     path.moveToPoint(CGPointMake(imageView.frame.origin.x,  imageView.center.y))
                     path.addLineToPoint(CGPointMake(imageView.frame.origin.x, imageView.center.y+3*blockHeight ))
                 }
-                else{
-                    path.moveToPoint(CGPointMake(imageView.frame.origin.x+imageView.frame.size.width-1,  imageView.center.y))
-                    path.addLineToPoint(CGPointMake(imageView.frame.origin.x+imageView.frame.size.width-1, imageView.center.y+3*blockHeight ))
-                }
-                
             }
             
-
+            
             for var i = 0; i < cutLineCenterArray.count; ++i{
                 var lineCenter : CGPoint = cutLineCenterArray[i]
                 path.moveToPoint(CGPointMake(lineCenter.x - imageView.frame.size.width/2-2,  lineCenter.y))
@@ -376,9 +373,9 @@ class lineView: UIView {
             
             shape1.strokeColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4).CGColor
             shape1.fillColor = UIColor.clearColor().CGColor
-            
+           
             let path1 = UIBezierPath()
-       // CGRectMake(0, 2,blockWidth, self.frame.size.height-blockWidth1-9)
+            // CGRectMake(0, 2,blockWidth, self.frame.size.height-blockWidth1-9)
             if i==3 || i==7{
                 sequenceIndex += 1
                 let nextCenter : CGPoint = getNoteCenter(firstNumber,sequenceNo: sequenceIndex)
@@ -386,33 +383,34 @@ class lineView: UIView {
                 if firstNumber < 14 {
                     path1.moveToPoint(CGPointMake(fromX,  2))
                     path1.addLineToPoint(CGPointMake(fromX,  self.frame.size.height-blockWidth1-9 ))
-
                     
-//                    path1.moveToPoint(CGPointMake(fromX,  12*blockHeight))
-//                    path1.addLineToPoint(CGPointMake(fromX,  20*blockHeight ))
                     
-
+                    //                    path1.moveToPoint(CGPointMake(fromX,  12*blockHeight))
+                    //                    path1.addLineToPoint(CGPointMake(fromX,  20*blockHeight ))
+                    
+                    
                 }
                 else{
                     path1.moveToPoint(CGPointMake(fromX,  2))
                     path1.addLineToPoint(CGPointMake(fromX,  self.frame.size.height-blockWidth1-9 ))
-//                    path1.moveToPoint(CGPointMake(fromX,  blockHeight))
-//                    path1.addLineToPoint(CGPointMake(fromX,  9*blockHeight ))
- 
+                    //                    path1.moveToPoint(CGPointMake(fromX,  blockHeight))
+                    //                    path1.addLineToPoint(CGPointMake(fromX,  9*blockHeight ))
+                    
                 }
                 
                 
             }
             shape1.path = path1.CGPath
             lineArray.addObject(shape1)
+
             
             
         }
         NSLog("Good")
-      
+        
         
     }
-
+    
     func drawUI(){
         for var i=0; i < circleArray.count; ++i{
             let cirlce : UIImageView = circleArray[i] as! UIImageView
@@ -431,15 +429,10 @@ class lineView: UIView {
         // Drawing code
         // Drawing the vertical line
         cntx = UIGraphicsGetCurrentContext()
-//        CGContextSetRGBStrokeColor(cntx, 179.0/255, 179.0/255, 179.0/255, 1.0)
+        //        CGContextSetRGBStrokeColor(cntx, 179.0/255, 179.0/255, 179.0/255, 1.0)
         CGContextSetRGBStrokeColor(cntx, 0, 0, 0, 1.0)
         CGContextSetLineWidth(cntx, 1.6)
-         blockHeight = rect.size.height/(9+2+9+12)
-        
-        
-        
-        
-        
+        blockHeight = rect.size.height/(9+2+9+12)
         tribleArray.append( blockHeight * CGFloat(0))
         for var i = 1; i < 10; i++ {
             
@@ -449,12 +442,12 @@ class lineView: UIView {
         for var i = 3; i < 8; i++ {
             CGContextMoveToPoint(cntx, 0, blockHeight * CGFloat(i))
             CGContextAddLineToPoint(cntx,rect.size.width , blockHeight * CGFloat(i))
-           
+            
         }
         let imageName = "tribble.png"
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
-       // imageView.backgroundColor = UIColor.grayColor()
+        // imageView.backgroundColor = UIColor.grayColor()
         
         let imgWidth = CGFloat((blockHeight * CGFloat(8)-blockHeight * CGFloat(2)))*((image?.size.width)!/(image?.size.height)!)
         
@@ -474,7 +467,7 @@ class lineView: UIView {
         let imageName1 = "bass.png"
         let image1 = UIImage(named: imageName1)
         let imageView1 = UIImageView(image: image1)
-       // imageView1.backgroundColor = UIColor.grayColor()
+        // imageView1.backgroundColor = UIColor.grayColor()
         let imgWidth1 = CGFloat((blockHeight * CGFloat(6.3)-blockHeight * CGFloat(3)))*((image1?.size.width)!/(image1?.size.height)!)
         imageView1.frame = CGRect(x: 20, y: blockHeight * CGFloat(13.9), width: imgWidth1, height: blockHeight * CGFloat(17.3)-blockHeight * CGFloat(14))
         // imageView1.contentMode = UIViewContentMode.ScaleAspectFit
@@ -548,7 +541,7 @@ class lineView: UIView {
             let btnCenter = keyCenterArray[i]
             if btnCenter > imgWidth1{
                 startKeyFromButtonNo = i + 2
-                break				
+                break
             }
         }
         if (UIDevice.currentDevice().model.rangeOfString("iPad") != nil) {
@@ -568,10 +561,10 @@ class lineView: UIView {
             self.addSubview(button)
             
         }
-       
+        
         CGContextStrokePath(cntx)
-       
-
+        
+        
     }
     func getKeyTitle(keyNo : Int)->String{
         
@@ -581,8 +574,8 @@ class lineView: UIView {
         
         switch (keyNameNo) {
         case 0:
-             keyName = String(format: "C%d",keySuffixNo)
-             break
+            keyName = String(format: "C%d",keySuffixNo)
+            break
         case 1:
             keyName = String(format: "D%d",keySuffixNo)
             break
@@ -603,10 +596,12 @@ class lineView: UIView {
             break
         }
         
-       return keyName
+        return keyName
     }
     func getNoteCenter(keyNo : Int,sequenceNo : Int)->CGPoint{
         
+      let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        if appDelegate.isMediumOnTrible == false{
         var keyCenter : CGPoint = CGPointZero
         var cutLineArray : [CGPoint] = []
         switch (keyNo) {
@@ -657,15 +652,19 @@ class lineView: UIView {
         case 13:
             keyCenter = CGPointMake(keyCenterArray[sequenceNo], (bassArray[3]+bassArray[2])/2)
             break
+            
         case 14:
-            keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[8])
-            cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[8]))
+            keyCenter = CGPointMake(keyCenterArray[sequenceNo], bassArray[2])
+            cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], bassArray[2]))
             break
         case 15:
-            keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[8]+tribleArray[7])/2)
+             keyCenter = CGPointMake(keyCenterArray[sequenceNo], (bassArray[2]+bassArray[1])/2)
+            cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], bassArray[2]))
             break
         case 16:
-            keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[7])
+             keyCenter = CGPointMake(keyCenterArray[sequenceNo], bassArray[1])
+            cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], bassArray[2]))
+             cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], bassArray[1]))
             break
         case 17:
             keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[7]+tribleArray[6])/2)
@@ -699,10 +698,10 @@ class lineView: UIView {
             cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[2]))
             break
         case 27:
-           keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[2]+tribleArray[1])/2)
-           cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[2]))
+            keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[2]+tribleArray[1])/2)
+            cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[2]))
             break
-
+            
         default:
             keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[1] )
             cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[1]))
@@ -712,13 +711,131 @@ class lineView: UIView {
         }
         cutLineCenterArray.removeAll()
         if cutLineArray.count > 0{
-            cutLineCenterArray.append(cutLineArray[0])
-        }
-        
-        if cutLineArray.count > 1{
-            cutLineCenterArray.append(cutLineArray[1])
+            for i in 0...cutLineArray.count-1 {
+                cutLineCenterArray.append(cutLineArray[i])
+            }
         }
         return keyCenter
+        }
+        else{
+            var keyCenter : CGPoint = CGPointZero
+            var cutLineArray : [CGPoint] = []
+            switch (keyNo) {
+                
+            case 0:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], bassArray[9])
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], bassArray[9]))
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], bassArray[8]))
+                break
+            case 1:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (bassArray[9]+bassArray[8])/2)
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], bassArray[8]))
+                break
+            case 2:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], bassArray[8])
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], bassArray[8]))
+                break
+            case 3:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (bassArray[8]+bassArray[7])/2)
+                break
+            case 4:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], bassArray[7])
+                break
+            case 5:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (bassArray[7]+bassArray[6])/2)
+                break
+            case 6:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], bassArray[6])
+                break
+            case 7:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (bassArray[6]+bassArray[5])/2)
+                break
+            case 8:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], bassArray[5])
+                break
+            case 9:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (bassArray[5]+bassArray[4])/2)
+                break
+            case 10:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], bassArray[4])
+                break
+            case 11:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (bassArray[4]+bassArray[3])/2)
+                break
+            case 12:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[9])
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[9]))
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[8]))
+                break
+            case 13:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[9]+tribleArray[8])/2)
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[8]))
+                break
+                
+            case 14:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[8])
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[8]))
+                break
+            case 15:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[8]+tribleArray[7])/2)
+                
+                break
+            case 16:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[7])
+                break
+            case 17:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[7]+tribleArray[6])/2)
+                break
+            case 18:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[6])
+                break
+            case 19:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[6]+tribleArray[5])/2)
+                break
+            case 20:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[5])
+                break
+            case 21:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[5]+tribleArray[4])/2)
+                break
+            case 22:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[4])
+                break
+            case 23:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[4]+tribleArray[3])/2)
+                break
+            case 24:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[3])
+                break
+            case 25:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[3]+tribleArray[2])/2)
+                break
+            case 26:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[2])
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[2]))
+                break
+            case 27:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], (tribleArray[2]+tribleArray[1])/2)
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[2]))
+                break
+                
+            default:
+                keyCenter = CGPointMake(keyCenterArray[sequenceNo], tribleArray[1] )
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[1]))
+                cutLineArray.append(CGPointMake(keyCenterArray[sequenceNo], tribleArray[2]))
+                break
+                
+            }
+            cutLineCenterArray.removeAll()
+            if cutLineArray.count > 0{
+                for i in 0...cutLineArray.count-1 {
+                    cutLineCenterArray.append(cutLineArray[i])
+                }
+            }
+            return keyCenter
+
+        }
+        //return CGPointZero
     }
     func getRedNoteCenter(keyNo : Int,sequenceNo : Int)->CGPoint{
         
@@ -825,4 +942,6 @@ class lineView: UIView {
         }
         return keyCenter
     }
+
+
 }
