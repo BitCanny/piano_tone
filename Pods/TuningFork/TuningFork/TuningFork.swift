@@ -124,21 +124,18 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
     public var delegate: TunerDelegate?
     public var timerTime: Double
     public var cutoffAmplitude : Float
-    public var keyToBeDetected : String
-    private let threshold: Float
+    public var threshold: Float
+    public var keyToBeDetected: String
     public let microphone: AKMicrophone
     private let analyzer: AKAudioAnalyzer
     private var timer: DispatchTimer?
-    private var oldKey : String = ""
-    private var olderKey : String = ""
-    public var isDataToBeSent : Bool = true
-    public var isDataToBeSent1 : Bool = true
     var keyFreq : Int = 0
-    private var freqArray : [Float] = []
-    private var ampArray : [Float] = []
-    private var freqToSend : Float = 0
-    private var ampToSend : Float = 0
-    var fIntArray : [Int] = []
+    var freqArray : [Float] = []
+    var ampArray : [Float] = []
+    var freqToSend : Float = 0
+    var ampToSend : Float = 0
+    
+    
     /**
     Initializes a new Tuner.
     
@@ -146,10 +143,9 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
     */
     public init(threshold: Float = 0.0) {
         self.timerTime = 0.01
-        self.cutoffAmplitude = 0.03
+        self.cutoffAmplitude = 0.08
         self.threshold = abs(threshold)
-        self.keyToBeDetected=""
-        isDataToBeSent = true
+        self.keyToBeDetected = ""
         microphone = AKMicrophone()
         analyzer = AKAudioAnalyzer(input: microphone.output)
         AKOrchestra.addInstrument(microphone)
@@ -172,28 +168,39 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
                 if a > self.cutoffAmplitude
                 {
                      NSLog("Key=%@",self.getKey(f))
-                    
-                    let dataType : Bool = self.isReliableData(f, amplitude: a )
-                    if dataType == true  {
-                        let output = Tuner.newOutput(self.freqToSend,self.ampToSend)
-                        self.isDataToBeSent = false
-                        self.microphone.restart()
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                 d.tunerDidUpdate(self, output: output)
-                            //self.microphone.start()
-                           // self.oldKey = ""
-                            //self.olderKey = ""
-                          //  self.keyFreq = 0
-                            })
-                     }
+                    self.freqArray.append(f)
+                    self.ampArray.append(a)
 
+                    self.doProcess()
+                    if self.ampToSend > 0 && self.freqToSend > 0{
+                        let output = Tuner.newOutput(self.freqToSend,self.ampToSend)
+                        //self.microphone.restart()
+                        //self.analyzer.restart()
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                               d.tunerDidUpdate(self, output: output)
+                            
+                        })
+                    }
                 }
                 else
                 {
                     //NSLog("XXXXXXXXXXAmp=%f,Freq=%f,Cut=%f", a,f,self.cutoffAmplitude)
-                    self.oldKey = ""
-                    self.olderKey = ""
+                    if self.ampArray.count >= 2{
+                        self.doProcess1()
+                        if self.ampToSend > 0 && self.freqToSend > 0{
+                            let key = self.getKey(self.freqToSend)
+                            if key == self.keyToBeDetected {
+                            let output = Tuner.newOutput(self.freqToSend,self.ampToSend)
+                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                d.tunerDidUpdate(self, output: output)
+                            })
+                            }
+                        }
+                    }
+                
                     self.keyFreq = 0
+                    self.ampArray.removeAll()
+                    self.freqArray.removeAll()
                 }
                     
             }
@@ -209,83 +216,10 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
         microphone.stop()
         analyzer.stop()
         timer?.pause()
-        oldKey  = ""
-        olderKey = ""
-        isDataToBeSent  = true
         keyFreq = 0
     }
 
-      func isReliableData(frequency: Float, amplitude: Float) -> Bool{
-       
-//       if isDataToBeSent == false{
-//            return false
-//       }
-       var norm = frequency
-       
-       while norm > frequencies[frequencies.count - 1] {
-           norm = norm / 2.0
-       }
-       while norm < frequencies[0] {
-           norm = norm * 2.0
-       }
-       
-       var i = -1
-       var min = Float.infinity
-       for n in 0...frequencies.count-1 {
-           let diff = frequencies[n] - norm
-           if abs(diff) < abs(min) {
-               min = diff
-               i = n
-           }
-       }
-       var result : Bool = false
-       let pitch = String(format: "%@", sharps[i % sharps.count], flats[i % flats.count])
-       let octave = i / 12
-       let key = pitch + "\(octave)"
-//        if keyToBeDetected .isEqual(key){
-//            keyToBeDetected = ""
-//            microphone.restart()
-//            analyzer.restart()
-//            
-//            return true
-//        }
-//        if fabs(min) > 0.3 {
-//            return false
-//       }
-       if olderKey .isEqual(key){
-        
-           return false
-       }
-//        if olderKey.isEqual("C2") && key.containsString("#"){
-//            return false
-//        }
-        
-       if oldKey .isEqual(key){
-           
-            ++keyFreq;
-            if keyFreq == 2 {
-                NSLog("KeyToSend=%@,Freq=%f,diff=%f,I=%d times=%d", key,frequency,min,i,keyFreq)
-                result = true
-                olderKey = key
-                
-                freqToSend = frequency
-                ampToSend = amplitude
-               
-                 }
-            
-             }
-        
-       
-         else{
-                  self.keyFreq = 1
-                  self.oldKey = key
-                  olderKey = ""
-
-              }
-        
-        return result
-    }
-  
+    
     static func newOutput(frequency: Float, _ amplitude: Float) -> TunerOutput {
         let output = TunerOutput()
         
@@ -346,6 +280,84 @@ A Tuner uses the devices microphone and interprets the frequency, pitch, etc.
         let key = pitch + "\(octave)"
         
         return key
+    }
+
+
+func doProcess() {
+    self.ampToSend = 0
+    self.freqToSend = 0
+    if ampArray.count < 4{
+        return
+    }
+   
+    var index = 0 , count = 1 , mainIndex = -1
+    for var i = 1; i < ampArray.count; ++i {
+        
+        if self.getKey(freqArray[index]) == self.getKey(freqArray[i]){
+            ++count;
+            index = i
+            if count >= 2{
+                mainIndex = index
+                break
+            }
+        }
+        else if count >= 2{
+            mainIndex = index
+            break
+        }
+        else{
+            count = 1
+            index = i
+        }
+    }
+
+    if count >= 2 && mainIndex > -1{
+        ampToSend = ampArray[mainIndex]
+        freqToSend = freqArray[mainIndex]
+        ampArray.removeRange(0 ... count-2)
+        freqArray.removeRange(0 ... count-2)
+        
+        
+    }
+    if ampArray.count > 2{
+        ampArray.removeRange(0 ... ampArray.count-2)
+        freqArray.removeRange(0 ... freqArray.count-2)
+       
+    }
+    
+}
+func doProcess1() {
+        self.ampToSend = 0
+        self.freqToSend = 0
+        
+        var index = 0 , count = 1 , mainIndex = -1
+        for var i = 1; i < ampArray.count; ++i {
+            
+            if self.getKey(freqArray[index]) == self.getKey(freqArray[i]){
+                ++count;
+                index = i
+                if count >= 2{
+                    mainIndex = index
+                    break
+                }
+            }
+            else if count >= 2{
+                mainIndex = index
+                break
+            }
+            else{
+                count = 1
+                index = i
+            }
+        }
+       
+        if count >= 2 && mainIndex > -1{
+            ampToSend = ampArray[mainIndex]
+            freqToSend = freqArray[mainIndex]
+        }
+        ampArray.removeAll()
+        freqArray.removeAll()
+        
     }
 
 }

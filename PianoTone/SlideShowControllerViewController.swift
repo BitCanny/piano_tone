@@ -33,7 +33,7 @@ class SlideShowControllerViewController: UIViewController,UIScrollViewDelegate {
         doneButton?.layer.borderWidth = 1.0
         doneButton?.layer.borderColor = UIColor.whiteColor().CGColor
         slideScrollView!.translatesAutoresizingMaskIntoConstraints = false
-        for var i = 0; i < 6; ++i{
+        for i in 0 ..< 6{
             
             
             if i == 0{
@@ -92,7 +92,7 @@ class SlideShowControllerViewController: UIViewController,UIScrollViewDelegate {
         }
         UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
             
-            slideScrollView?.contentOffset = CGPoint(x: CGFloat( screenNo) * slideScrollView!.frame.size.width  , y: 0)
+            self.slideScrollView?.contentOffset = CGPoint(x: CGFloat( screenNo) * self.slideScrollView!.frame.size.width  , y: 0)
             }, completion: nil)
 
         
@@ -106,7 +106,7 @@ class SlideShowControllerViewController: UIViewController,UIScrollViewDelegate {
         }
         UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
             
-            slideScrollView?.contentOffset = CGPoint(x: CGFloat( screenNo) * slideScrollView!.frame.size.width  , y: 0)
+            self.slideScrollView?.contentOffset = CGPoint(x: CGFloat( screenNo) * self.slideScrollView!.frame.size.width  , y: 0)
             }, completion: nil)
 
        

@@ -103,7 +103,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         }
         toDB = defaults.doubleForKey("amplitudeLevel")
         if toDB <= 0 {
-            toDB = 0.03
+            toDB = 0.008
         }
         
         timeForTimer = defaults.doubleForKey("timerTime")
@@ -491,9 +491,9 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
         dispatch_after(delayTime, dispatch_get_main_queue()){
             
-            self.tuner?.isDataToBeSent = true
+                       self.startTuner()
+            
             self.tuner?.keyToBeDetected = self.generatedKeyArray[self.currentKeyNo]
-            self.startTuner()
            // self.tuner?.microphone.start()
         }
         
@@ -545,8 +545,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler:    {(alert :UIAlertAction!) in
             self.timer   =    NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "update", userInfo: nil, repeats: true)
           //  self.tuner?.start()
-            self.tuner?.isDataToBeSent = true
-           // self.tuner?.microphone.start()
+           
             
         }))
         
@@ -579,6 +578,9 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
     
         if totalKeyCompleted == totalPage*totalKeys {
             
+            self.stopTuner()
+            timer?.invalidate()
+            running = false
             let defaults = NSUserDefaults.standardUserDefaults()
             
             defaults.setBool(false, forKey: "isCurrentGame")
@@ -652,9 +654,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                 
             }
             
-            self.stopTuner()
-            timer?.invalidate()
-            running = false
+            
             
             durationGameLabel?.text = timeLabel?.text
             LevelGameLabel?.text = gameLevel
@@ -669,9 +669,9 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
             finishGameView?.frame = CGRectZero
             UIView.animateWithDuration(0.7, delay: 0.0, usingSpringWithDamping: 0.5,
                 initialSpringVelocity: 0.5, options: [], animations: {
-                    finishGameView?.frame = frameBaseView
+                    self.finishGameView?.frame = frameBaseView
                 }, completion: { finished in
-                  finishGameView?.center = CGPointMake((finishBgView?.frame.size.width)!/2, (finishBgView?.frame.size.height)!/2)
+                  self.finishGameView?.center = CGPointMake((self.finishBgView?.frame.size.width)!/2, (self.finishBgView?.frame.size.height)!/2)
             });
 //            UIView.animateWithDuration(0.5, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
 //                self.finishBgView?.hidden = false
@@ -799,7 +799,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                     self.resumeButton?.enabled = true
                     self.running = true
 //                    self.tuner?.timerTime = self.timeForTimer
-                    self.tuner?.timerTime = 0.1
+                    self.tuner?.timerTime = 0.05
                    // self.tuner?.cutoffAmplitude = 0.01
                     
                     self.tuner?.cutoffAmplitude = Float( self.toDB)
@@ -834,8 +834,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
                     dispatch_after(delayTime, dispatch_get_main_queue()){
                         
-                        self.tuner?.isDataToBeSent = true
-                       // self.tuner?.microphone.start()
+                       
                         
                     }
                     self.flashKeyLabel?.text = self.generatedKeyArray[self.currentKeyNo]
@@ -859,7 +858,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                         self.flashKeyLabel?.text = self.generatedKeyArray[self.currentKeyNo]
                         self.correctButton!.setTitle( String(format: "%d",self.totalCorrect), forState: UIControlState.Normal)
                         self.wrongButton!.setTitle(String(format: "%d",self.totalWrong), forState: UIControlState.Normal)
-                        self.tuner?.keyToBeDetected = self.generatedKeyArray[self.currentKeyNo]
+                       self.tuner?.keyToBeDetected = self.generatedKeyArray[self.currentKeyNo]
                        // self.tuner?.start()
                         
                     }
@@ -917,7 +916,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         
         
     }
-    public func startTuner() {
+    func startTuner() {
         if !running {
             running = true
 //            tuner?.timerTime = self.timeForTimer
@@ -931,7 +930,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
         }
     }
     
-    public func stopTuner() {
+     func stopTuner() {
         if running {
             running = false
             tuner?.stop()
@@ -1009,9 +1008,6 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
             
                                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
                                dispatch_after(delayTime, dispatch_get_main_queue()){
-                
-                                 self.tuner?.isDataToBeSent = true
-                               // self.tuner?.microphone.start()
                                 
                                }
                                 self.flashKeyLabel?.text = self.generatedKeyArray[self.currentKeyNo]
@@ -1032,8 +1028,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                                 let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
                                 dispatch_after(delayTime, dispatch_get_main_queue()){
                                     
-                                    self.tuner?.isDataToBeSent = true
-                                   // self.tuner?.microphone.start()
+                                   
                                     NSLog("Wrong")
                                 }
                                 return
@@ -1049,8 +1044,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                                 let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC) ))
                                 dispatch_after(delayTime, dispatch_get_main_queue()){
                                     
-                                    self.tuner?.isDataToBeSent = true
-                                    //self.tuner?.microphone.start()
+                                   
                                     NSLog("Wrong")
                                 }
 
@@ -1076,8 +1070,6 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate, T
                           let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1  ))
                           dispatch_after(delayTime, dispatch_get_main_queue()){
                           
-                                self.tuner?.isDataToBeSent = true
-                               // self.tuner?.microphone.start()
                             NSLog("Wrong")
                           }
         
