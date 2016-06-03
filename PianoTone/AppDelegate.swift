@@ -1,3 +1,4 @@
+
 //
 //  AppDelegate.swift
 //  PianoTone
@@ -15,14 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var isHardOnTrible : Bool = true
     var window: UIWindow?
     var mainViewController: ViewController?
-    
     var generatedEasyKeyArray : [String] = ["D3","B3","E3","D3","F4","D4","D4","D4","E4","D4","A4","E4"]
-    
-//    var generatedHardKeyArray : [String] = ["E4","B5","F4","C6","F4","C4","F4","C6","E5","C6","A4","F5"]
+    //    var generatedHardKeyArray : [String] = ["E4","B5","F4","C6","F4","C4","F4","C6","E5","C6","A4","F5"]
     var generatedHardKeyArray : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3","F3","G3"]
     var keyArray : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3","F3","G3","A3","B3"]
     var keyArrayTrible : [String] = ["C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"]
-    
     var keyArrayEassy : [String] = ["C3","D3","E3","F3","G3","A3","B3"]
     var keyArrayTribleEassy : [String] = ["C4","D4","E4","F4","G4","A4","B4"]
     var isPreGeneratedKeys : Bool = false
@@ -31,13 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         let defaults = NSUserDefaults.standardUserDefaults()
-       // defaults.setBool(true, forKey: "isUsePreKeys")
         let isMode = defaults.boolForKey("isMode")
         if isMode == false{
              defaults.setBool(true, forKey: "isMode")
             defaults.setObject("Challenge", forKey: "Mode")           
-            
-
         }
         let isLevel = defaults.boolForKey("isLevel")
         if isLevel == false{
@@ -45,12 +40,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.setObject("Hard", forKey: "Level")
 
         }
-       
         let isTimerTime = defaults.boolForKey("isTimerTime")
         if isTimerTime == false{
             defaults.setBool(true, forKey: "isTimerTime")
             defaults.setDouble(0.1, forKey: "timerTime")
-            
         }
         let toDB = defaults.doubleForKey("amplitudeLevel")
         if toDB <= 0 {
@@ -91,9 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     func getHardKeyArray()->[String]{
         
-        
-      ++hardArrayIndex
-        
+        hardArrayIndex += 1
         switch (hardArrayIndex) {
         case  0  :
             generatedHardKeyArray.removeAll()
@@ -124,8 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return generatedHardKeyArray
     }
     func getMediumKeyArray()->[String]{
-        ++hardArrayIndex
-       
+        hardArrayIndex += 1
         switch (hardArrayIndex) {
         case  0  :
             generatedHardKeyArray.removeAll()
@@ -156,8 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return generatedHardKeyArray
     }
     func getEasyKeyArray()->[String]{
-        ++easyArrayIndex
-      
+        easyArrayIndex += 1
         switch (easyArrayIndex) {
         case  0  :
             generatedEasyKeyArray.removeAll()
@@ -197,12 +186,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var keyArrayEassy1 : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3"]
         var keyArrayTribleEassy1 : [String] = ["F3","G3","A3","B3","C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"]
         
-        for var j = 0; j < 12/4; ++j{
+        for _ in 0 ..< 12/4{
             srand(UInt32(time(nil)))
             let groupNo = Int(arc4random_uniform(UInt32( 2)))
             srand(UInt32(time(nil)))
             if groupNo == 1 {
-                for var j=0;j < 12/3;++j{
+                for _ in 0 ..< 12/3{
                     //srand(UInt32(time(nil)))
                     let i = Int(arc4random_uniform(UInt32( keyArrayEassy1.count)))
                     
@@ -211,7 +200,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
             else{
-                for var j=0;j<12/3;++j{
+                for _ in 0 ..< 12/3{
                     //srand(UInt32(time(nil)))
                     let i = Int(arc4random_uniform(UInt32( keyArrayTribleEassy1.count)))
                     
@@ -228,12 +217,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             var keyArrayEassy1 : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3","F3","G3","A3","B3","C4","D4","E4","F4","G4"]
             var keyArrayTribleEassy1 : [String] = ["A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"]
             
-            for var j = 0; j < 12/4; ++j{
+            for _ in 0 ..< 12/4{
                 srand(UInt32(time(nil)))
                 let groupNo = Int(arc4random_uniform(UInt32( 2)))
                 srand(UInt32(time(nil)))
                 if groupNo == 1 {
-                    for var j=0;j < 12/3;++j{
+                    for _ in 0 ..< 12/3{
                         //srand(UInt32(time(nil)))
                         let i = Int(arc4random_uniform(UInt32( keyArrayEassy1.count)))
                         
@@ -242,7 +231,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
                 else{
-                    for var j=0;j<12/3;++j{
+                    for _ in 0 ..< 12/3{
                         //srand(UInt32(time(nil)))
                         let i = Int(arc4random_uniform(UInt32( keyArrayTribleEassy1.count)))
                         
@@ -267,12 +256,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var keyArrayEassy1 : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3","F3","G3","A3","B3","C4","D4","E4"]
         var keyArrayTribleEassy1 : [String] = ["F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"]
         
-        for var j = 0; j < 12/4; ++j{
+        for _ in 0 ..< 12/4{
             srand(UInt32(time(nil)))
             let groupNo = Int(arc4random_uniform(UInt32( 2)))
             srand(UInt32(time(nil)))
             if groupNo == 1 {
-                for var j=0;j < 12/3;++j{
+                for _ in 0 ..< 12/3{
                    srand(UInt32(time(nil)))
                     let i = Int(arc4random_uniform(UInt32( keyArrayEassy1.count)))
                     
@@ -281,7 +270,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
             else{
-                for var j=0;j<12/3;++j{
+                for _ in 0 ..< 12/3{
                    srand(UInt32(time(nil)))
                     let i = Int(arc4random_uniform(UInt32( keyArrayTribleEassy1.count)))
                     
@@ -298,12 +287,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             var keyArrayEassy1 : [String] = ["C2","D2","E2","F2","G2","A2","B2","C3","D3","E3","F3","G3"]
             var keyArrayTribleEassy1 : [String] = ["A3","B3","C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"]
             
-            for var j = 0; j < 12/4; ++j{
+            for _ in 0 ..< 12/4{
                 srand(UInt32(time(nil)))
                 let groupNo = Int(arc4random_uniform(UInt32( 2)))
                 srand(UInt32(time(nil)))
                 if groupNo == 1 {
-                    for var j=0;j < 12/3;++j{
+                    for _ in 0 ..< 12/3{
                         srand(UInt32(time(nil)))
                         let i = Int(arc4random_uniform(UInt32( keyArrayEassy1.count)))
                         
@@ -312,7 +301,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
                 else{
-                    for var j=0;j<12/3;++j{
+                    for _ in 0 ..< 12/3{
                         srand(UInt32(time(nil)))
                         let i = Int(arc4random_uniform(UInt32( keyArrayTribleEassy1.count)))
                         
@@ -331,12 +320,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var keyArrayEassy1 : [String] = ["C3","D3","E3","F3","G3","A3","B3"]
         var keyArrayTribleEassy1 : [String] = ["C4","D4","E4","F4","G4","A4","B4"]
         var keyArrayReturn : [String] = []
-        for var j = 0; j < 12/4; ++j{
+        for _ in 0 ..< 12/4{
             srand(UInt32(time(nil)))
             let groupNo = Int(arc4random_uniform(UInt32( 2)))
             srand(UInt32(time(nil)))
             if groupNo == 1 {
-                for var j=0;j < 12/3;++j{
+                for _ in 0 ..< 12/3{
                     srand(UInt32(time(nil)))
                     let i = Int(arc4random_uniform(UInt32( keyArrayEassy1.count)))
                     

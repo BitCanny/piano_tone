@@ -49,7 +49,7 @@ class HomeController: UIViewController {
             selector: "removeFromUserDefault",
             name: "removeFromUserDefault",
             object: nil)
-        
+        settingView!.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
         
         self.navigationController?.navigationBarHidden = true
         
@@ -135,7 +135,7 @@ class HomeController: UIViewController {
         settingView?.layer.cornerRadius = 10.0
         settingView?.layer.borderWidth = 1.0
         settingView?.layer.borderColor = UIColor.whiteColor().CGColor
-        //settingView?.backgroundColor = UIColor(patternImage: UIImage(named: "bgImage.png")!)
+        
         
         trainingButton?.layer.masksToBounds = true
         trainingButton?.layer.cornerRadius = 20.0
@@ -183,14 +183,14 @@ class HomeController: UIViewController {
         
         if mode.caseInsensitiveCompare("Training") == NSComparisonResult.OrderedSame {
             trainingButton?.backgroundColor = UIColor.whiteColor()
-            challengeButton?.backgroundColor = UIColor.clearColor()
+            challengeButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
             
             trainingButton?.titleLabel?.textColor = UIColor.blackColor()
             challengeButton?.titleLabel?.textColor = UIColor.whiteColor()
             
         }
         else{
-            trainingButton?.backgroundColor = UIColor.clearColor()
+            trainingButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
             challengeButton?.backgroundColor = UIColor.whiteColor()
             
             challengeButton?.titleLabel?.textColor = UIColor.blackColor()
@@ -202,33 +202,33 @@ class HomeController: UIViewController {
             easyButton?.backgroundColor = UIColor.whiteColor()
             easyButton?.titleLabel?.textColor = UIColor.blackColor()
             
-            hardButton?.backgroundColor = UIColor.clearColor()
+            hardButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
             hardButton?.titleLabel?.textColor = UIColor.whiteColor()
             
-            mediumButton?.backgroundColor = UIColor.clearColor()
+            mediumButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
             mediumButton?.titleLabel?.textColor = UIColor.whiteColor()
            
             
         }
         else if level.caseInsensitiveCompare("Medium") == NSComparisonResult.OrderedSame {
             
-            easyButton?.backgroundColor = UIColor.clearColor()
+            easyButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
             easyButton?.titleLabel?.textColor = UIColor.whiteColor()
             
-            hardButton?.backgroundColor = UIColor.clearColor()
+            hardButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
             hardButton?.titleLabel?.textColor = UIColor.whiteColor()
             
             mediumButton?.backgroundColor = UIColor.whiteColor()
             mediumButton?.titleLabel?.textColor = UIColor.blackColor()
         }
         else{
-            easyButton?.backgroundColor = UIColor.clearColor()
+            easyButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
             easyButton?.titleLabel?.textColor = UIColor.whiteColor()
             
             hardButton?.backgroundColor = UIColor.whiteColor()
             hardButton?.titleLabel?.textColor = UIColor.blackColor()
             
-            mediumButton?.backgroundColor = UIColor.clearColor()
+            mediumButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
             mediumButton?.titleLabel?.textColor = UIColor.whiteColor()
         }
       
@@ -251,8 +251,6 @@ class HomeController: UIViewController {
         let defaults = NSUserDefaults.standardUserDefaults()
         gameMode =  defaults.objectForKey("Mode") as! String
         gameLevel =  defaults.objectForKey("Level") as! String
-        NSLog("Mode=%@,Level=%@", gameMode,gameLevel)
-      
         check()
         
         
@@ -308,7 +306,8 @@ class HomeController: UIViewController {
             defaults.setInteger(levelNo, forKey: "levelNo")
             defaults.setObject(generatedKeyArray, forKey: "generatedKeyArray")
             defaults.setObject(PressedKeyArray, forKey: "PressedKeyArray")
-            defaults.setObject(--whichKey, forKey: "whichKey")
+            whichKey -= 1
+            defaults.setObject(whichKey, forKey: "whichKey")
             defaults.setObject(gameLevel, forKey: "Level")
             defaults.setObject(gameMode, forKey: "Mode")
             defaults.synchronize()
@@ -652,23 +651,23 @@ class HomeController: UIViewController {
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject("Hard", forKey: "Level")
         defaults.synchronize()
-        easyButton?.backgroundColor = UIColor.clearColor()
+        easyButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         easyButton?.titleLabel?.textColor = UIColor.whiteColor()
         
         hardButton?.backgroundColor = UIColor.whiteColor()
         hardButton?.titleLabel?.textColor = UIColor.blackColor()
         
-        mediumButton?.backgroundColor = UIColor.clearColor()
+        mediumButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         mediumButton?.titleLabel?.textColor = UIColor.whiteColor()
     }
     @IBAction func didMediumClick(button: UIButton) {
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject("Medium", forKey: "Level")
         defaults.synchronize()
-        easyButton?.backgroundColor = UIColor.clearColor()
+        easyButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         easyButton?.titleLabel?.textColor = UIColor.whiteColor()
         
-        hardButton?.backgroundColor = UIColor.clearColor()
+        hardButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         hardButton?.titleLabel?.textColor = UIColor.whiteColor()
         
         mediumButton?.backgroundColor = UIColor.whiteColor()
@@ -682,10 +681,10 @@ class HomeController: UIViewController {
         easyButton?.backgroundColor = UIColor.whiteColor()
         easyButton?.titleLabel?.textColor = UIColor.blackColor()
         
-        hardButton?.backgroundColor = UIColor.clearColor()
+        hardButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         hardButton?.titleLabel?.textColor = UIColor.whiteColor()
         
-        mediumButton?.backgroundColor = UIColor.clearColor()
+        mediumButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         mediumButton?.titleLabel?.textColor = UIColor.whiteColor()
         
     }
@@ -696,7 +695,7 @@ class HomeController: UIViewController {
         defaults.setObject("Challenge", forKey: "Mode")
         defaults.synchronize()
         
-        trainingButton?.backgroundColor = UIColor.clearColor()
+        trainingButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         challengeButton?.backgroundColor = UIColor.whiteColor()
         
         challengeButton?.titleLabel?.textColor = UIColor.blackColor()
@@ -709,7 +708,7 @@ class HomeController: UIViewController {
         defaults.setObject("Training", forKey: "Mode")
         defaults.synchronize()
         trainingButton?.backgroundColor = UIColor.whiteColor()
-        challengeButton?.backgroundColor = UIColor.clearColor()
+        challengeButton?.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         
         trainingButton?.titleLabel?.textColor = UIColor.blackColor()
         challengeButton?.titleLabel?.textColor = UIColor.whiteColor()
